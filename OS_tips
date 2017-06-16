@@ -1,0 +1,139 @@
+1. OS is system software closely related with computer hardware. It is a program that acts as an intermediary between a user and computer hardware.
+	- Execute user programs and making solving problems easier
+	- Use the hardware in an efficent manner
+	- Easy interface for user to execute programs
+	
+	
+	
+	
+2. Computer Hardware -> Operating system (makes hardware user friendly) -> System (compilers etc.) and application programs (built by users, web browsers, text editors) -> Users (who are running those applications and processes)
+
+
+
+
+3. OS is a resource allocator. It also decides between conflicting requests for efficient resource use.
+It also controls execution of program to prevent improper use of computer (some process is not overwriting area allocated to some other process). I/O is also accessed via OS (application programs call printf() function -> triggers OS to do actual I/O).
+
+
+
+
+4. Computer Startup :- Bootstrap program is loaded at reboot
+	- Typically stored in ROM or EPROM.
+	- Generally known as firmware
+	- Initialises all aspects of system
+	- Loads OS kernel (from hard-disk) and starts execution
+
+
+
+
+5. If the OS is saved into ROM, then would it mean that number of OSes in a lifetime of a machine are constant?
+No, the OS is stored in Electrically Erasable ROM.
+
+
+
+
+6. CS organisation :- CPU can't interact directly with I/O device, it interacts with device controllers (they have a local memory known as local buffer). These device controllers are connected by buses to each other and to CPU. CPU moves data from memory to local buffers or vice versa. The I/O is done by mediation of device controller i.e. some input isn't directly stored in memory from device or some output doesn't from viceversa (this mediation is controlled by CPU). Device controllers interrupt CPU for some read/write operation to/from device.
+
+
+
+
+7. Interrupt Handling :- So, when a hardware (I/O - does by passing it to CPU directly using buses) or software (program - does by calling a system call) interrupts -
+	- The CPU saves its current state into some position in memory (RAM)
+	- The interrupt-request accompanies interrupt-routine-address
+	- The CPU goes to that address and execute that routine
+	- CPU goes back to its own work reloading the saved state in RAM
+	
+However, interrupts must be handled quickly. Since only a predefined number of interrupts is possible, a table of pointers to interrupt routines can be used instead to provide the necessary speed. The interrupt routine is called indirectly through the table, with no intermediate routine needed. Generally, the table of pointers is stored in low memory (the first hundred or so locations).
+
+Interrupt handler is part of OS i.e. device drivers.
+
+Correctness of ongoing application doesn't get affected by interrupts.
+
+For each type of interrupt, we have specific service routines that are run (indexed into a vector for easy retrieval)
+
+
+
+
+8. OS is executed when the need is to interact with the hardware
+	- Hardware interrupts to CPU
+	- Some application is executing and require some service from CPU
+	- Some exception has occured (software interrupt = trap)
+	
+Some things like number crunching (adding, subtracting etc.) could be done without any I/O so OS doesn't get executed in that case.
+
+OS is always loaded into memory but it runs only in case of software or hardware interrupts.
+
+
+
+
+9. I/O structure (point 7) + 
+Application -> System call routines (services from OS) -> Device driver (in OS) -> Device controller -> Device
+
+Blocking call :- When application halts after making a system call.
+Non Blocking call :- When application resumes it's own work after making a system call.
+
+
+
+
+10. To speed up the data flow from device controller to memory, DMA is used making the se of CPU minimal (CPU doesn't get interrupted while doing it's own work).
+
+
+
+
+11. Storage Structure :- 
+Main memory is volatile and small => Secondary storage (hard drive) is used.
+Speed, cost, volatility are factors distinguishing different memory devices.
+
+Cache :- Copy frequent data into faster storage system.
+Caching is a process not necessarily from Memory to Hardware cache. It can be from any slower-large storage to faster-small system.eg. Hard disk -> Main memory.
+
+
+
+
+12. Computer System Architecture :-
+Multiprocessor :- Same memory, hard disk are shared but more than One CPUs. It's cheaper (than buying 4 computers), reliable (works even if one CPU fails).
+
+	- Asymmetric :- Master-Slave. One CPU controls all others.
+	- Symmetric :- OS decides which CPU would be running which task.
+	
+Dual Core design :- Two CPUs with their own registers.
+
+Clustered systems :- Like multiprocessor systems, they share storage via a storage-area network.
+
+	- Asymmetric :- One PC always in hot-standby mode, would be used when one PC gets failed.
+	- Symmetric :- Multiple nodes running applications, monitoring each other, One PC covers for some other failed PC
+
+
+	
+
+13. OS structure :-
+In past, only one program could be run at a time. Now, the modern computers support multi-programming. Executing more jobs (modern) reduces the waiting time for same number of jobs being performed one after another (past).
+
+Timesharing :- Logical extension in which CPU switches jobs so frequently that user can interact with each job while it is running, creating interactive computing.
+	- Response time is very low (user won't like if he has to wait 1 minute to get "Hello world!", here the CPU switches between jobs in let 100ms - making the program interaction instantaneous)
+	
+For multiple jobs, CPU shares time and memory shares space.
+
+
+
+
+14. OS operations :-
+	- Software error or request creating exception or trap
+	- Processes modifying ach other or OS (Use Dual mode to rectify)
+	- Infinite loop (Rectify by timer interrupt)
+	
+	Dual mode :- User mode and Kernel mode
+		- Mode bit provided by hardware (0 -> kernel mode, 1 -> user mode)
+		- Some instructions designated as priviliged, only executable in kernel mode (0 mode bit). eg. Writing something to device controller
+		- System call changes mode to kernel (mode bit to 0), returning again resets it to user.
+		
+user process executing -> calls system call	  return from sys call
+								| trap mode bit = 0  /bit = 1
+								execute system call-/
+								
+	
+	Preventing a process hogging resources :- Set the timer to interrupt after a while (fixed or variable time).
+	
+	
+	
+					-----------------   END OF FIRST DAY LECTURES  ---------------------------

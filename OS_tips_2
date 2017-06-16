@@ -1,0 +1,167 @@
+1. Major OS Concepts/Functions/Components :-
+
+   Process management - Running program is process.
+   Which process will run on resources of CPU and for how long is done by CPU.
+   Managing (Scheduling, Loading the program, Starting the execution, Terminating) the process
+   
+   Memory management - Managing the main memory and Virtual memory (programs using more memory than available) among many process.
+   
+   Storage / File management - File is a abstract entity provided by OS (hardware doesn't provide any file - It's for the sake of user only). This file abstraction is provided by OS. Which file will use which part of disc - Mapping files to disc blocks.
+   
+   I/O management - I/O requires executing OS routines which can access device controllers (using device drivers - which OS can access) which can inturn access device (hardware) and do some read/write operation.
+   
+   Protection and Security - Controls access to resources, Prevent processes from interfering with each other and OS.
+   
+
+2. Process management :-
+	- A process is program in execution. Program is a passive entity, process is a active entity.
+	- Process executes instructions sequentially. OS provides facilities to manage processes. Process needs CPU, memory, I/O, files. A system may have more than one processes concurrently, the OS uses thread concept for that.
+	- Upon completion, resources are released.
+	- Process synchronisation & communication - Interaction or overlapping between processes.
+	
+3. Memory management :-
+	- Keeping track of which parts of memory are currently being used.
+	- Deciding which processes and data to move into and out of memory.
+	- Allocating and deallocating memory space as needed.
+	
+	- Process address space :- A process has instructions, Data, stack which have some addresses. OS map the logical address space (name given just for understanding) of process to physical main memory (RAM). OS maintains which part of process resides where in RAM.
+	
+
+4. Storage management :- OS provides uniform & logical concept known as files.
+
+	Mass storage management :- disk (secondary), CDs, tapes
+		- This might be affecting performance of CPU
+		- OS activities
+			- Free space management (knowing which portions are empty)
+			- Storage allocation (Which files are where)
+			- Disk scheduling (Access disk in efficient manner)
+
+
+5. Multitasking environments must be careful to use most RECENT value of a variable, no matter where it is stored in the storage hierarchy.
+
+Similarly, Multiprocessor environments must provide cache coherency in hardware such that all CPUs have the most recent value in their cache.
+
+
+
+6. I/O subsytem :-
+	- OS hide pecularities of hardware devices from user.
+	- I/O subsytem is responsible for
+		- Buffers for memory
+		- Device drivers know how to talk with hardware.
+		- Uniform device interface - To provide an abstraction os OS from hardware.
+		
+		
+7. Protection and Security :-
+	- Controlling access of processes or users to resources defined by OS.
+	- Systems distinguish among users using user_id. Different users may have different priviliges over a same file.
+	- Defense of system against DDOS, worms.
+	
+8. OS services :-
+	- Provide a convenient environment for users/applications
+	- Resource allocation and management
+	
+	- Services providing functions helpful for users
+		- UI - Can be CLI, Batch or GUI
+		- Program execution - The OS must be able to load a program into memory, an to run it.
+		- I/O operations
+		- File-system manipulation
+		- Communications
+		- Errordetection
+		
+	- Services providing functions for ensuring sfficient operation
+		- Resource allocation
+		- Accounting
+		- Protections and Security
+		
+	
+
+	
+	- User Interface
+	CLI :- Sometimes not part of kernel (separate program "shell" in UNIX), but might be part of system in some cases.
+	GUI :- Icons, Mouse button actions
+	Most OSes have both CLI and GUI interface.
+	
+	System Calls :-
+		- It is an interface provided to applications to the services rovided by OS. Typically written in C/C++.
+		- Mostly they are accessed by programs via a High-level API (i.e. library) rather than direct system call use.
+		- Most common APIs - Win32, POSIX
+		- The direct way of caling system calls is not taken as it actually invovles calling trap instructions (to switch between user and supervisor mode), set some registers and we don't want to be involved in that. So, library function does this for us before calling system call.
+		
+		System calls <- API (Library) <- Your program
+		sys_open()	 <-fopen(), open() <-  fd = open()
+		Kernel Code <-Standard C library code <- Yor program Code
+		
+		- The library doesn't call the system_call directly (putting the address of function in Program Counter), Instead it puts the sys_call_number in a register. After that, library function calls trap machine instruction (suspends the current application and switches to kernel mode). It then uses the sys_call_index from that register and uses it as an index to system-call-table, where there is address of sys_call. Now, this sys_call runs in the CPU.
+		
+	eg.	Copying contents of file1 to file2
+		
+		Read file1 name - Write prompt on screen, Access input
+		Read file2 name
+		Open file1 - If it doesn't exists, abort
+		Create file2 - If it exists, abort
+		Loop - Read from file1, write to file2
+		Until read fails
+		Close output file
+		Write completion message to screen
+		Terminate normally
+		
+	Library implementer would know as to which sys_call is to be called.
+	
+	System Call implementation
+		- System call number is stored in a table.
+		
+	User application -> open() -> Uses number of sys_call after it migrates to kernel mode -> Find the address of sys_call -> Executes the function in CPU.
+	
+	
+	Parameter passing in the System Call :-
+		- For example, write() requires 3 parameters.
+		- Can keep parameters in registers - Limited registers would then mean limited parameters, Value of parameters are very high.
+		- Parameters stored in block, or table.
+		- Parameters places in stack.
+		
+		Last two methods don't limit the parameters that can be passed.
+		
+	Types of System Calls :-
+		- Process control	- CreateProcess(), fork()
+		- File manipulation - CreateFile(), open()
+		- Device manipulation - SetConsoleMode(), ioctl()/read()...
+		(In UNIX, read() & write() are very general functions - It can read() from a device or from a file() depending upon the parameters)
+		- Communications - CreatePipe(), pipe() (Shared memory area - One process reading and other process writing)
+		- Information maintenance - GetCurrentProcess(), getpid()
+		- Protection - SetFileSecurity(), chmod()
+		
+	
+	System programs :-
+		- eg. cp in UNIX.
+		- They uses sys_calls too, but they come in with the installation CD 
+		- File manipulation (rename, copy, delete)
+		- Status (date, time, memory available)
+		- File modification (text editor, grep)
+		- Programming language support (compiler, debugger)
+		- Program loading and execution (loaders, linkers)
+		- Communications (ftp, browsers, ssh)
+		
+		- Most user's view of the OS is defined by system programs, not the actual sys_calls.
+		
+		
+		User Interface (Part of the kernel or not)
+			/		\
+System Programs		Application Programs
+				|
+			System Calls
+				|		
+		Rest of the Kernel
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+   
+   
